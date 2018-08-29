@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="This is ping-manger home.">
+    <meta name="author" content="mishal">
+
+    <title>SimplePingManager - Home</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="res/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="res/cover.css" rel="stylesheet">
+
+    <style>
+        /* Center the loader */
+        #loader {
+            z-index: 1;
+            width: 10px;
+            height: 10px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #3498db;
+            width: 30px;
+            height: 30px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Add animation to "page content" */
+        .animate-bottom {
+            position: relative;
+            -webkit-animation-name: animatebottom;
+            -webkit-animation-duration: 1s;
+            animation-name: animatebottom;
+            animation-duration: 1s
+        }
+
+        @-webkit-keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+            to {
+                bottom: 0px;
+                opacity: 1
+            }
+        }
+
+        @keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        #myDiv {
+            display: none;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body class="text-center" onload="defaultSet()">
+
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+
+    <header class="masthead mb-auto">
+        <div class="inner">
+            <h2 class="masthead-brand"><b>Simple Ping Manager :)</b></h2>
+        </div>
+    </header>
+
+    <div>
+
+        <main role="main" class="inner cover">
+            <div class="row" id="request-div">
+                <div class="col-12">
+                    &nbsp;
+                    <form name="url-form" id="url-form" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="url" name="url" required=""
+                                   placeholder="www.abc.com or 192.168.1.1">
+                        </div>
+                        <div class="form-group float-right">
+                            <button type="reset" id="reset-button" class="btn btn-outline-warning ">Reset</button>
+                            &nbsp;
+                            <button type="submit" class="btn btn-outline-light" id="submit-button">Submit</button>
+                        </div>
+                        <div class="form-group" id="loader"></div>
+                    </form>
+                </div>
+            </div>
+
+            &nbsp;
+            <div class="row" id="response-div">
+                <div class="col-12">
+                    <h2 class="cover-heading">Ping Statistics</h2>
+                    <hr/>
+                    <form>
+                        <div class="row">
+                            <div class="col-12">
+                                <h5><b>Round trip time (ms)</b></h5>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="res-min-time">Minimum</label>
+                                    <input type="number" class="form-control" disabled="" id="min">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="res-max-time">Maximum</label>
+                                    <input type="number" class="form-control" disabled="" id="max">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="res-avg-time">Average</label>
+                                    <input type="number" class="form-control" disabled="" id="avg">
+                                </div>
+                            </div>
+                        </div>
+                        &nbsp;
+                        <div class="row">
+                            <div class="col-12">
+                                <h5><b>Message</b></h5>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="3" id="message" disabled></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        &nbsp;
+                        <div class="row">
+                            <div class="col-12">
+                                <h5><b>System Id</b></h5>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="1" id="systemid" disabled></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <footer class="mastfoot mt-auto">
+        <div class="inner">
+
+        </div>
+    </footer>
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="res/popper.js"></script>
+<script src="res/bootstrap.js"></script>
+
+<script type="application/javascript">
+
+    $(document).ready(function () {
+
+        // click on button submit
+        $("#url-form").submit(function (e) {
+
+            e.preventDefault();
+
+            var formData = {
+                url: $("#url").val()
+            }
+
+            if (document.getElementById("loader").style.display === "none") {
+                document.getElementById("loader").style.display = "block";
+            }
+
+            $.ajax({
+                url: 'rest/process',
+                contentType: "application/json",
+                type: "POST",
+                dataType: 'json',
+                data: JSON.stringify(formData),
+                success: function (result) {
+                    //console.log(result);
+                    document.getElementById("loader").style.display = "none";
+
+                    if (document.getElementById("response-div").style.display === "none") {
+                        document.getElementById("response-div").style.display = "block";
+                    }
+
+
+                    $("#message").val(result['message']);
+                    $("#systemid").val(result['sysId']);
+
+                    if (result['error'] === false) {
+                        $("#min").val(result['pingAnalyticResponse']['min']);
+                        $("#max").val(result['pingAnalyticResponse']['max']);
+                        $("#avg").val(result['pingAnalyticResponse']['avg']);
+                    }
+
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                    document.getElementById("loader").style.display = "none";
+
+                    if (document.getElementById("response-div").style.display === "none") {
+                        document.getElementById("response-div").style.display = "block";
+                    }
+
+                    $("#message").val('ERROR: Something went wrong!!! Please try again later.');
+                }
+            })
+        });
+
+        $("#reset-button").on('click', function () {
+            document.getElementById("response-div").style.display = "none";
+            document.getElementById("loader").style.display = "none";
+        });
+    });
+
+
+    function defaultSet() {
+        document.getElementById("response-div").style.display = "none";
+        document.getElementById("loader").style.display = "none";
+    }
+
+</script>
+
+</body>
+</html>
